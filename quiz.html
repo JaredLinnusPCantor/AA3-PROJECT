@@ -1,0 +1,128 @@
+<!DOCTYPE html5>
+
+<head>
+
+    <title>Education</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Education Organization - Quiz</h1>
+        <h2>animal facts</h2>
+        <nav class="nav">
+            <div class="nav-item"><a href="index.html"><b>Home</b></a></div>
+            <div class="nav-item"><a href="about.html"><b>About Us</b></a></div>
+            <div class="nav-item"><a href="donate.html"><b>Donation</b></a></div>
+            <div class="nav-item"><a href="quiz.html"><b>Test Your Knowledge</b></a></div>
+        </nav>
+    </header>
+
+    <br>
+
+    <div class="contain-quiz">
+        <h2>5 Quiz</h2>
+        <p>There are 5 questions that will test your knowledge about animals.</p>
+        <button class="yap3" id="startBTN" onclick="startQuiz()"><b>Start Quiz</b></button>
+        <div id="quiz" style="display: none;">
+            <div id="question"></div>
+            <div id="options"></div>
+            <button class="yap3" id="nextBtn" onclick="nextQuestion()" style="display: none;"><b>Next</b></button>
+        </div>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Which of the following animals is known for its ability to change color for camouflage?",
+                options: ["Elephant", "Chameleon", "Cheetah", "Penguin"],
+                answer: 1
+            },
+            {
+                question: "Which of the following animals is known as the largest land mammal?",
+                options: ["Hippopotamus", "Elephant", "Bear", "Giraffe"],
+                answer: 1
+            },
+            {
+                question: "What is the primary diet of a giant panda?",
+                options: ["Fish", "Insects", "Bamboo", "Fruit"],
+                answer: 2
+            },
+            {
+                question: "Which bird is famous for its ability to mimic human speech?",
+                options: ["Parrot", "Sparrow", "Robin", "Eagle"],
+                answer: 0
+            },
+            {
+                question: "Which of the mammals is known for laying eggs?",
+                options: ["Bat", "Dolphin", "Platypus", "Lion"],
+                answer: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function startQuiz() {
+            document.getElementById("startBTN").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizData[currentQuestion];
+            const questionContainer = document.getElementById("question");
+            const optionsContainer = document.getElementById("options");
+
+            questionContainer.innerHTML = `<div class="question">${currentQuestion + 1}. ${q.question}</div>`;
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((option, i) => {
+                const button = document.createElement('button');
+                button.classList.add('option-btn');
+                button.innerHTML = option;
+                button.onclick = () => selectAnswer(i);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById("nextBtn").style.display = "none";
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const correctAnswer = quizData[currentQuestion].answer;
+            const buttons = document.querySelectorAll(".option-btn");
+
+            buttons.forEach((button, index) => {
+                if (index === correctAnswer) {
+                    button.classList.add("correct");
+                } else if (index === selectedIndex) {
+                    button.classList.add("incorrect");
+                }
+                button.disabled = true;
+            });
+
+            document.getElementById("nextBtn").style.display = "block";
+
+            if (selectedIndex === correctAnswer) {
+                score++;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz").innerHTML = "";
+                document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("result").innerText = `Quiz finished! Your score: ${score}/${quizData.length}`;
+            }
+        }
+    </script>
+</body>
+</html>
